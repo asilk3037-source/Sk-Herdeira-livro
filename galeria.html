@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galeria Visual — Herdeira das Cinzas</title>
+<meta name="description" content="Prompts de geração de imagem para personagens e lugares da saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="galeria">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Referência visual</span>
+    <h1>Galeria Visual</h1>
+    <p class="lede">Prompts prontos para gerar imagens de personagens e lugares em qualquer ferramenta (Midjourney, DALL·E, Imagen, Firefly…). Cole o bloco de estilo antes do prompt do personagem ou lugar.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="callout blood">
+      <span class="callout-title">Regra importante</span>
+      <p id="gallery-note"></p>
+    </div>
+
+    <div class="toolbar">
+      <div class="filter-group" id="tabs"></div>
+    </div>
+
+    <div id="style-block" class="gallery-block" style="border-color:var(--gold);"></div>
+
+    <div id="gallery-grid" style="margin-top:16px;"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  document.getElementById('gallery-note').textContent = SITE_DATA.gallery.note;
+
+  let active = 'characters';
+  const tabsBox = document.getElementById('tabs');
+  const tabs = { characters: 'Personagens & Feras', places: 'Lugares' };
+
+  function renderTabs(){
+    tabsBox.innerHTML = '';
+    Object.keys(tabs).forEach(key => {
+      const btn = el('button', 'filter-btn' + (key === active ? ' active' : ''), tabs[key]);
+      btn.addEventListener('click', () => { active = key; renderTabs(); renderGrid(); });
+      tabsBox.appendChild(btn);
+    });
+  }
+
+  function renderStyleBlock(){
+    const box = document.getElementById('style-block');
+    const style = active === 'characters' ? SITE_DATA.gallery.styleCharacters : SITE_DATA.gallery.stylePlaces;
+    box.innerHTML = `
+      <h4>Bloco de estilo — colar antes de todo prompt de ${active === 'characters' ? 'personagem' : 'lugar'}
+        <button class="copy-btn" data-copy="${encodeURIComponent(style)}">Copiar</button>
+      </h4>
+      <div class="prompt">${style}</div>
+    `;
+    box.querySelector('.copy-btn').addEventListener('click', (e) => {
+      copyToClipboard(style, e.currentTarget);
+    });
+  }
+
+  function renderGrid(){
+    renderStyleBlock();
+    const grid = document.getElementById('gallery-grid');
+    grid.innerHTML = '';
+    const items = active === 'characters' ? SITE_DATA.gallery.characters : SITE_DATA.gallery.places;
+    items.forEach(item => {
+      const block = el('div', 'gallery-block');
+      block.innerHTML = `
+        <h4>${item.name} <button class="copy-btn">Copiar</button></h4>
+        <div class="prompt">${item.prompt}</div>
+      `;
+      block.querySelector('.copy-btn').addEventListener('click', (e) => {
+        const styleText = active === 'characters' ? SITE_DATA.gallery.styleCharacters : SITE_DATA.gallery.stylePlaces;
+        copyToClipboard(styleText + '\n\n' + item.prompt, e.currentTarget);
+      });
+      grid.appendChild(block);
+    });
+  }
+
+  renderTabs();
+  renderGrid();
+})();
+</script>
+</body>
+</html>

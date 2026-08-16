@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herdeira das Cinzas — Bíblia da Saga</title>
+<meta name="description" content="Site de referência para a saga Herdeira das Cinzas: fichas de personagens, sistema de magia, mundo, linha do tempo, cânone e progresso de escrita.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="home">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Bíblia da saga · Ashling</span>
+    <h1>Herdeira das Cinzas</h1>
+    <p class="lede">
+      Assassina foragida, herdeira de duas linhagens que nunca deveriam se encontrar.
+      Este é o seu espaço de orientação: personagens, sistema de magia, mundo, cânone
+      fechado e o progresso real dos manuscritos — tudo num só lugar, para você nunca
+      perder o fio da meada entre um capítulo e outro.
+    </p>
+    <div style="margin-top:22px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn primary" href="personagens.html">Ver fichas de personagens</a>
+      <a class="btn" href="progresso.html">Ver progresso de escrita</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Panorama da saga</h2>
+      <span class="tag" id="panorama-updated"></span>
+    </div>
+    <div class="stat-row" id="stat-row"></div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="container">
+    <div class="section-head"><h2>Navegar por seção</h2></div>
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));">
+      <a class="nav-card" href="personagens.html">
+        <span class="ico">🗡️</span>
+        <h3>Personagens &amp; Feras</h3>
+        <p>Fichas completas de protagonistas, secundários, vilões e as criaturas invocadas — com linhagem, aparência e arco.</p>
+      </a>
+      <a class="nav-card" href="mundo.html">
+        <span class="ico">🗺️</span>
+        <h3>Mundo</h3>
+        <p>Sistema de magia da invocação, genealogia das casas, povos, reino e lugares da saga.</p>
+      </a>
+      <a class="nav-card" href="linha-do-tempo.html">
+        <span class="ico">📜</span>
+        <h3>Linha do Tempo &amp; Outline</h3>
+        <p>Cronologia fechada dos eventos, o outline completo do Livro 1 e a estrutura em quatro atos do Livro 2.</p>
+      </a>
+      <a class="nav-card" href="canone.html">
+        <span class="ico">🔒</span>
+        <h3>Cânone Cravado</h3>
+        <p>Todas as decisões de worldbuilding e enredo já fechadas — pesquisável por tópico, para nunca se contradizer.</p>
+      </a>
+      <a class="nav-card" href="fios-abertos.html">
+        <span class="ico">🧵</span>
+        <h3>Fios Abertos</h3>
+        <p>Ganchos, pendências e decisões ainda não tomadas — o que falta amarrar antes do fim da saga.</p>
+      </a>
+      <a class="nav-card" href="progresso.html">
+        <span class="ico">✍️</span>
+        <h3>Progresso de Escrita</h3>
+        <p>Capítulo a capítulo dos dois livros, com contagem de palavras e marcação do que já foi revisado.</p>
+      </a>
+      <a class="nav-card" href="galeria.html">
+        <span class="ico">🎨</span>
+        <h3>Galeria Visual</h3>
+        <p>Prompts prontos de geração de imagem para cada personagem e lugar, com bloco de estilo fixo.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="container">
+    <div class="section-head"><h2>O gancho do Livro 1</h2></div>
+    <ol class="tl" id="hook-list" style="list-style:none;"></ol>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline, gerada a partir da Bíblia da História e dos manuscritos de progresso.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/chapters.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const b1 = BOOK_CHAPTERS.livro1, b2 = BOOK_CHAPTERS.livro2;
+  const b1Words = b1.reduce((a,c)=>a+c.words,0);
+  const b2Words = b2.reduce((a,c)=>a+c.words,0);
+
+  const stats = [
+    { num: SITE_DATA.characters.length + SITE_DATA.creatures.length, label: 'Personagens & feras' },
+    { num: b1.length, label: 'Capítulos — Livro 1 (completo)' },
+    { num: b2.length, label: 'Capítulos escritos — Livro 2' },
+    { num: (b1Words + b2Words).toLocaleString('pt-BR'), label: 'Palavras escritas até agora' },
+    { num: SITE_DATA.canon.length, label: 'Decisões de cânone cravado' },
+    { num: SITE_DATA.openThreads.length, label: 'Fios em aberto' },
+  ];
+  const row = document.getElementById('stat-row');
+  stats.forEach(s => {
+    const tile = el('div', 'stat-tile');
+    tile.innerHTML = `<span class="num">${s.num}</span><span class="label">${s.label}</span>`;
+    row.appendChild(tile);
+  });
+
+  const hookList = document.getElementById('hook-list');
+  SITE_DATA.timelineHookBook1.forEach((t, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<b>Passo ${i+1}</b><p>${t}</p>`;
+    hookList.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>

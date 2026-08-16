@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personagens — Herdeira das Cinzas</title>
+<meta name="description" content="Fichas completas dos personagens e feras da saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="personagens">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Fichas</span>
+    <h1>Personagens &amp; Feras</h1>
+    <p class="lede">Toda a galeria de personagens — protagonistas, secundários, adicionais e as criaturas invocadas. Clique num cartão para abrir a ficha completa.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="toolbar">
+      <div class="search"><input type="text" id="search-input" placeholder="Buscar por nome, papel, facção…"></div>
+      <div class="filter-group" id="category-filters"></div>
+    </div>
+    <div class="toolbar" style="margin-top:-10px;">
+      <div class="filter-group" id="faction-filters"></div>
+    </div>
+    <div class="grid" id="char-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">Nenhum personagem encontrado com esse filtro.</div>
+
+    <div class="act-head" style="margin-top:50px;"><div class="line"></div><h3>Feras invocadas</h3><div class="line"></div></div>
+    <div class="grid" id="creature-grid"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const grid = document.getElementById('char-grid');
+  const emptyState = document.getElementById('empty-state');
+  const searchInput = document.getElementById('search-input');
+  const categoryFilters = document.getElementById('category-filters');
+  const factionFilters = document.getElementById('faction-filters');
+  const modal = makeModal();
+
+  const categories = ['Todos', 'Principal', 'Secundário', 'Adicional'];
+  let activeCategory = 'Todos';
+  let activeFaction = 'Todas';
+
+  const allFactions = ['Todas'].concat(
+    Array.from(new Set(SITE_DATA.characters.flatMap(c => c.factions || []))).sort()
+  );
+
+  function catClass(cat){
+    if (cat === 'Principal') return 'gold';
+    if (cat === 'Secundário') return 'frost';
+    return 'outline';
+  }
+
+  function renderFilters(){
+    categoryFilters.innerHTML = '';
+    categories.forEach(cat => {
+      const btn = el('button', 'filter-btn' + (cat === activeCategory ? ' active' : ''), cat === 'Todos' ? 'Todos' : cat + 's');
+      btn.addEventListener('click', () => { activeCategory = cat; renderFilters(); renderGrid(); });
+      categoryFilters.appendChild(btn);
+    });
+    factionFilters.innerHTML = '';
+    allFactions.forEach(f => {
+      const btn = el('button', 'filter-btn' + (f === activeFaction ? ' active' : ''), f);
+      btn.addEventListener('click', () => { activeFaction = f; renderFilters(); renderGrid(); });
+      factionFilters.appendChild(btn);
+    });
+  }
+
+  function matches(c){
+    const q = searchInput.value.trim().toLowerCase();
+    const inCategory = activeCategory === 'Todos' || c.category === activeCategory;
+    const inFaction = activeFaction === 'Todas' || (c.factions || []).includes(activeFaction);
+    const text = [c.name, c.role, (c.factions||[]).join(' '), (c.tags||[]).join(' ')].join(' ').toLowerCase();
+    const inSearch = !q || text.includes(q);
+    return inCategory && inFaction && inSearch;
+  }
+
+  function renderGrid(){
+    grid.innerHTML = '';
+    const list = SITE_DATA.characters.filter(matches);
+    emptyState.style.display = list.length ? 'none' : 'block';
+    list.forEach(c => {
+      const card = el('div', 'card');
+      card.innerHTML = `
+        <div class="name">${c.name}</div>
+        <div class="role">${c.role}</div>
+        <div class="desc">${(c.bio && c.bio[0]) || ''}</div>
+        <div class="tags">
+          <span class="chip ${catClass(c.category)}">${c.category}</span>
+          ${(c.books||[]).map(b => `<span class="chip outline">Livro ${b}</span>`).join('')}
+        </div>
+      `;
+      card.addEventListener('click', () => openCharacter(c));
+      grid.appendChild(card);
+    });
+  }
+
+  function openCharacter(c){
+    modal.open(content => {
+      content.innerHTML = `
+        <div class="role">${c.role}</div>
+        <h2>${c.name}</h2>
+        <div class="tags">
+          <span class="chip ${catClass(c.category)}">${c.category}</span>
+          ${(c.factions||[]).map(f => `<span class="chip outline">${f}</span>`).join('')}
+        </div>
+        <div class="factsheet">
+          ${factsheetRow('Idade', c.age)}
+          ${factsheetRow('Altura', c.height)}
+          ${factsheetRow('Status', c.status)}
+          ${factsheetRow('Linhagem', c.lineage)}
+          ${factsheetRow('Fera', c.fera)}
+          ${factsheetRow('Livros', (c.books||[]).map(b=>'Livro '+b).join(' · '))}
+        </div>
+        ${c.appearance ? `<div class="body-block"><h4>Aparência</h4><p>${c.appearance}</p></div>` : ''}
+        ${c.marks ? `<div class="body-block"><h4>Marcas</h4><p>${c.marks}</p></div>` : ''}
+        <div class="body-block"><h4>Ficha</h4>${(c.bio||[]).map(p => `<p>${p}</p>`).join('')}</div>
+      `;
+    });
+  }
+
+  const creatureGrid = document.getElementById('creature-grid');
+  SITE_DATA.creatures.forEach(cr => {
+    const card = el('div', 'card');
+    card.innerHTML = `
+      <div class="name">${cr.name}</div>
+      <div class="role">${cr.species} · ${cr.gender} · fera de ${cr.owner}</div>
+      <div class="desc">${cr.description}</div>
+      <div class="tags"><span class="chip violet">${cr.owner}</span></div>
+    `;
+    card.addEventListener('click', () => {
+      modal.open(content => {
+        content.innerHTML = `
+          <div class="role">${cr.species} · ${cr.gender}</div>
+          <h2>${cr.name}</h2>
+          <div class="tags"><span class="chip violet">Fera de ${cr.owner}</span></div>
+          <div class="factsheet">
+            ${factsheetRow('Dono(a)', cr.owner)}
+            ${factsheetRow('Espécie', cr.species)}
+            ${factsheetRow('Gênero', cr.gender)}
+            ${factsheetRow('Origem', cr.born)}
+          </div>
+          <div class="body-block"><h4>Descrição</h4><p>${cr.description}</p></div>
+          ${cr.power ? `<div class="body-block"><h4>Poder / regra</h4><p>${cr.power}</p></div>` : ''}
+          ${cr.quote ? `<div class="callout violet"><span class="callout-title">Fala</span><p>${cr.quote}</p></div>` : ''}
+        `;
+      });
+    });
+    creatureGrid.appendChild(card);
+  });
+
+  searchInput.addEventListener('input', renderGrid);
+  renderFilters();
+  renderGrid();
+})();
+</script>
+</body>
+</html>
