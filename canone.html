@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cânone Cravado — Herdeira das Cinzas</title>
+<meta name="description" content="Registro pesquisável de todas as decisões de worldbuilding e enredo já fechadas na saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="canone">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Regras fechadas</span>
+    <h1>Cânone Cravado</h1>
+    <p class="lede">Toda decisão de worldbuilding ou enredo já fechada, para nunca se contradizer entre um capítulo e o próximo. Pesquise por nome, tema ou capítulo.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="toolbar">
+      <div class="search"><input type="text" id="search-input" placeholder="Buscar no cânone (ex: Nyx, Theon, olhos, Selwyn)…"></div>
+      <span class="tag" id="result-count"></span>
+    </div>
+    <div id="canon-list"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">Nenhuma entrada de cânone encontrada.</div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const list = document.getElementById('canon-list');
+  const searchInput = document.getElementById('search-input');
+  const emptyState = document.getElementById('empty-state');
+  const resultCount = document.getElementById('result-count');
+
+  function render(){
+    const q = searchInput.value.trim().toLowerCase();
+    const items = SITE_DATA.canon.filter(c => !q || (c.topic + ' ' + c.text + ' ' + c.date).toLowerCase().includes(q));
+    resultCount.textContent = items.length + ' de ' + SITE_DATA.canon.length + ' entradas';
+    list.innerHTML = '';
+    emptyState.style.display = items.length ? 'none' : 'block';
+    items.forEach(c => {
+      const item = el('div', 'canon-item');
+      item.innerHTML = `<div class="head"><span class="topic">${c.topic}</span><span class="date">${c.date}</span></div><p>${c.text}</p>`;
+      list.appendChild(item);
+    });
+  }
+
+  searchInput.addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>

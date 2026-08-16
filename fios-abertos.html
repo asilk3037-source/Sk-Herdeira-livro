@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fios Abertos — Herdeira das Cinzas</title>
+<meta name="description" content="Ganchos, pendências e decisões ainda não tomadas na saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="fios-abertos">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Pendências</span>
+    <h1>Fios Abertos</h1>
+    <p class="lede">O que ainda não foi decidido ou amarrado — ganchos plantados de propósito e pendências reais que precisam de uma decisão sua antes de fechar a saga.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid" id="threads-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const grid = document.getElementById('threads-grid');
+  SITE_DATA.openThreads.forEach(t => {
+    const card = el('div', 'card');
+    card.style.cursor = 'default';
+    card.innerHTML = `
+      <div class="tags" style="margin-top:0; margin-bottom:10px;"><span class="chip ember">Em aberto</span></div>
+      <div class="name" style="font-size:1.02rem;">${t.title}</div>
+      <div class="desc" style="-webkit-line-clamp: unset;">${t.text}</div>
+    `;
+    grid.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>

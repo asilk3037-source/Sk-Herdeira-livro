@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mundo — Herdeira das Cinzas</title>
+<meta name="description" content="Sistema de magia, genealogia, povos e lugares da saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="mundo">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Worldbuilding</span>
+    <h1>O Mundo</h1>
+    <p class="lede">Sistema de invocação, as três linhagens de sangue, os povos que disputam Valdris e os lugares que moldam a jornada de Ashling.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Sistema de Magia — Invocação</h2><span class="tag">A Fenda</span></div>
+    <div class="prose"><p id="magic-intro"></p></div>
+    <div class="two-col" style="margin-top:20px;">
+      <div>
+        <h3 style="font-size:1rem; color:var(--gold-soft); font-family:var(--font-ui); text-transform:uppercase; letter-spacing:.06em; font-size:.78rem;">Regras do sistema</h3>
+        <div id="magic-rules"></div>
+      </div>
+      <div>
+        <h3 style="font-size:1rem; color:var(--gold-soft); font-family:var(--font-ui); text-transform:uppercase; letter-spacing:.06em; font-size:.78rem;">Hierarquia do dom</h3>
+        <div id="magic-hierarchy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Genealogia — As três linhagens</h2></div>
+    <div class="grid" id="houses-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr));"></div>
+    <div class="callout" style="margin-top:22px;" id="genealogy-notes"></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Povos &amp; Reino</h2></div>
+    <div class="grid" id="peoples-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px,1fr));"></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Lugares</h2>
+      <span class="tag" id="places-count"></span>
+    </div>
+    <div class="grid" id="places-grid"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const modal = makeModal();
+
+  document.getElementById('magic-intro').textContent = SITE_DATA.magic.intro;
+
+  const rulesBox = document.getElementById('magic-rules');
+  SITE_DATA.magic.rules.forEach(r => {
+    const c = el('div', 'callout');
+    c.innerHTML = `<span class="callout-title">${r.title}</span><p>${r.text}</p>`;
+    rulesBox.appendChild(c);
+  });
+
+  const hierBox = document.getElementById('magic-hierarchy');
+  SITE_DATA.magic.hierarchy.forEach(r => {
+    const c = el('div', 'callout frost');
+    c.innerHTML = `<span class="callout-title">${r.title}</span><p>${r.text}</p>`;
+    hierBox.appendChild(c);
+  });
+
+  const housesGrid = document.getElementById('houses-grid');
+  SITE_DATA.houses.forEach(h => {
+    const card = el('div', 'card');
+    card.style.cursor = 'default';
+    card.innerHTML = `<div class="name">${h.name}</div><div class="desc" style="-webkit-line-clamp: unset;">${h.text}</div>`;
+    housesGrid.appendChild(card);
+  });
+
+  document.getElementById('genealogy-notes').innerHTML =
+    '<span class="callout-title">Notas de linhagem</span>' +
+    SITE_DATA.genealogyNotes.map(n => `<p>${n}</p>`).join('');
+
+  const peoplesGrid = document.getElementById('peoples-grid');
+  SITE_DATA.peoples.forEach(p => {
+    const card = el('div', 'card');
+    card.style.cursor = 'default';
+    card.innerHTML = `<div class="name">${p.name}</div><div class="desc" style="-webkit-line-clamp: unset;">${p.text}</div>`;
+    peoplesGrid.appendChild(card);
+  });
+
+  const placesGrid = document.getElementById('places-grid');
+  document.getElementById('places-count').textContent = SITE_DATA.places.length + ' locais';
+  SITE_DATA.places.forEach(p => {
+    const card = el('div', 'card');
+    card.innerHTML = `
+      <div class="name">${p.name}</div>
+      <div class="role">${p.region}</div>
+      <div class="desc">${p.text}</div>
+    `;
+    card.addEventListener('click', () => {
+      modal.open(content => {
+        content.innerHTML = `
+          <div class="role">${p.region}</div>
+          <h2>${p.name}</h2>
+          <div class="body-block"><p>${p.text}</p></div>
+        `;
+      });
+    });
+    placesGrid.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>

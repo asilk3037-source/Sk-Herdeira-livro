@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linha do Tempo — Herdeira das Cinzas</title>
+<meta name="description" content="Cronologia, gancho do Livro 1 e outline por capítulo dos dois livros da saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="linha-do-tempo">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Estrutura</span>
+    <h1>Linha do Tempo &amp; Outline</h1>
+    <p class="lede">A cronologia fechada dos grandes eventos, o outline completo do Livro 1 (52 capítulos) e a estrutura em quatro atos do Livro 2, em progresso.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Cronologia fechada</h2><span class="tag">auditoria 2026-08-16</span></div>
+    <ul class="tl" id="chronology-list" style="list-style:none;"></ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Gancho do Livro 1</h2></div>
+    <ol class="tl" id="hook-list" style="list-style:none;"></ol>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Livro 1 — Outline por capítulo</h2><span class="tag">3 atos · 52 capítulos · completo</span></div>
+    <div id="book1-outline"></div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Livro 2 — Estrutura em 4 atos</h2><span class="tag">~60–65 capítulos · 33 escritos</span></div>
+    <p class="prose" id="book2-summary" style="max-width:760px; margin-bottom:20px;"></p>
+    <div id="book2-acts"></div>
+
+    <div class="act-head"><div class="line"></div><h3>Notas de capítulo conhecidas</h3><div class="line"></div></div>
+    <div class="chapter-list" id="book2-notes"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const chronoList = document.getElementById('chronology-list');
+  SITE_DATA.chronology.forEach(c => {
+    const li = document.createElement('li');
+    li.innerHTML = `<b>${c.event}</b><p>${c.when}</p>`;
+    chronoList.appendChild(li);
+  });
+
+  const hookList = document.getElementById('hook-list');
+  SITE_DATA.timelineHookBook1.forEach((t, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<b>Passo ${i+1}</b><p>${t}</p>`;
+    hookList.appendChild(li);
+  });
+
+  const b1Box = document.getElementById('book1-outline');
+  SITE_DATA.book1Outline.forEach(act => {
+    const head = el('div', 'act-head');
+    head.innerHTML = `<div class="line"></div><h3>${act.act} <span style="color:var(--text-faint); font-family:var(--font-ui); font-size:.7rem; text-transform:none; letter-spacing:0;">(${act.range})</span></h3><div class="line"></div>`;
+    b1Box.appendChild(head);
+    const list = el('ol', 'tl');
+    list.style.listStyle = 'none';
+    act.chapters.forEach(text => {
+      const li = document.createElement('li');
+      li.innerHTML = `<p>${text}</p>`;
+      list.appendChild(li);
+    });
+    b1Box.appendChild(list);
+  });
+
+  document.getElementById('book2-summary').textContent = SITE_DATA.book2Outline.summary;
+
+  const b2ActsBox = document.getElementById('book2-acts');
+  SITE_DATA.book2Outline.acts.forEach(act => {
+    const card = el('div', 'callout ember');
+    card.style.marginBottom = '14px';
+    card.innerHTML = `<span class="callout-title">${act.act} — ${act.range}</span><p>${act.text}</p>`;
+    b2ActsBox.appendChild(card);
+  });
+
+  const notesBox = document.getElementById('book2-notes');
+  SITE_DATA.book2Outline.chapterNotes.forEach(n => {
+    const item = el('div', 'canon-item');
+    item.innerHTML = `<div class="head"><span class="topic">Capítulo ${n.num}</span></div><p>${n.note}</p>`;
+    notesBox.appendChild(item);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progresso de Escrita — Herdeira das Cinzas</title>
+<meta name="description" content="Progresso capítulo a capítulo dos manuscritos do Livro 1 e Livro 2 da saga Herdeira das Cinzas.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="progresso">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="glyph">🔥</span> Herdeira das Cinzas</div>
+    <nav class="navlinks">
+      <a href="index.html" data-page="home">Início</a>
+      <a href="personagens.html" data-page="personagens">Personagens</a>
+      <a href="mundo.html" data-page="mundo">Mundo</a>
+      <a href="linha-do-tempo.html" data-page="linha-do-tempo">Linha do Tempo</a>
+      <a href="canone.html" data-page="canone">Cânone</a>
+      <a href="fios-abertos.html" data-page="fios-abertos">Fios Abertos</a>
+      <a href="progresso.html" data-page="progresso">Progresso</a>
+      <a href="galeria.html" data-page="galeria">Galeria</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="container">
+    <span class="eyebrow">Progresso</span>
+    <h1>Progresso de Escrita</h1>
+    <p class="lede">Capítulo a capítulo, gerado a partir dos manuscritos reais. Marque os capítulos já revisados — a marcação fica salva neste navegador.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="stat-row" id="stat-row"></div>
+
+    <div class="toolbar">
+      <div class="filter-group" id="book-tabs"></div>
+      <div style="flex:1"></div>
+      <div class="bar" style="width:220px;"><span id="progress-bar" style="width:0%"></span></div>
+      <span class="tag" id="progress-label"></span>
+    </div>
+
+    <div class="chapter-list" id="chapter-list"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">Herdeira das Cinzas — bíblia de referência de Aline. A marcação de revisão é salva localmente no seu navegador (localStorage) e não é enviada a lugar nenhum.</div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/chapters.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+  const books = {
+    livro1: { label: 'Livro 1 — A Última Ashkari', chapters: BOOK_CHAPTERS.livro1, notes: {}, total: 52, complete: true },
+    livro2: { label: 'Livro 2', chapters: BOOK_CHAPTERS.livro2, notes: {}, total: '~60–65', complete: false }
+  };
+  SITE_DATA.book2Outline.chapterNotes.forEach(n => { books.livro2.notes[String(n.num)] = n.note; });
+
+  let active = 'livro1';
+  const STORAGE_PREFIX = 'ashling-progress-';
+
+  function isChecked(book, num){ return localStorage.getItem(STORAGE_PREFIX + book + '-' + num) === '1'; }
+  function setChecked(book, num, val){
+    if (val) localStorage.setItem(STORAGE_PREFIX + book + '-' + num, '1');
+    else localStorage.removeItem(STORAGE_PREFIX + book + '-' + num);
+  }
+
+  const tabsBox = document.getElementById('book-tabs');
+  function renderTabs(){
+    tabsBox.innerHTML = '';
+    Object.keys(books).forEach(key => {
+      const btn = el('button', 'filter-btn' + (key === active ? ' active' : ''), books[key].label);
+      btn.addEventListener('click', () => { active = key; renderTabs(); renderChapters(); });
+      tabsBox.appendChild(btn);
+    });
+  }
+
+  function renderStats(){
+    const row = document.getElementById('stat-row');
+    row.innerHTML = '';
+    const b1 = books.livro1.chapters, b2 = books.livro2.chapters;
+    const b1Words = b1.reduce((a,c)=>a+c.words,0);
+    const b2Words = b2.reduce((a,c)=>a+c.words,0);
+    const stats = [
+      { num: b1.length, label: 'Capítulos — Livro 1' },
+      { num: b1Words.toLocaleString('pt-BR'), label: 'Palavras — Livro 1' },
+      { num: b2.length, label: 'Capítulos escritos — Livro 2' },
+      { num: b2Words.toLocaleString('pt-BR'), label: 'Palavras — Livro 2' },
+      { num: (b1Words + b2Words).toLocaleString('pt-BR'), label: 'Total de palavras' },
+    ];
+    stats.forEach(s => {
+      const tile = el('div', 'stat-tile');
+      tile.innerHTML = `<span class="num">${s.num}</span><span class="label">${s.label}</span>`;
+      row.appendChild(tile);
+    });
+  }
+
+  function renderChapters(){
+    const data = books[active];
+    const list = document.getElementById('chapter-list');
+    list.innerHTML = '';
+
+    data.chapters.forEach(c => {
+      const details = document.createElement('details');
+      details.className = 'chapter';
+      const note = data.notes[String(c.num)];
+      const checked = isChecked(active, c.num);
+
+      const summary = document.createElement('summary');
+      summary.innerHTML = `
+        <span class="n">${c.num}</span>
+        <span class="t">${c.teaser}</span>
+        <span class="w">${c.words.toLocaleString('pt-BR')} palavras</span>
+        <label style="display:flex; align-items:center; gap:6px;" onclick="event.stopPropagation()">
+          <input type="checkbox" ${checked ? 'checked' : ''} aria-label="Marcar capítulo ${c.num} como revisado">
+        </label>
+      `;
+      const checkbox = summary.querySelector('input');
+      checkbox.addEventListener('change', () => {
+        setChecked(active, c.num, checkbox.checked);
+        updateProgressBar();
+      });
+
+      const body = document.createElement('div');
+      body.className = 'chapter-body';
+      body.innerHTML = `<p>${c.teaser}</p>` + (note ? `<p style="color:var(--gold-soft);"><b>Nota de cânone:</b> ${note}</p>` : '');
+
+      details.appendChild(summary);
+      details.appendChild(body);
+      list.appendChild(details);
+    });
+
+    updateProgressBar();
+  }
+
+  function updateProgressBar(){
+    const data = books[active];
+    const doneCount = data.chapters.filter(c => isChecked(active, c.num)).length;
+    const pct = data.chapters.length ? Math.round((doneCount / data.chapters.length) * 100) : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = `${doneCount}/${data.chapters.length} revisados (${pct}%)`;
+  }
+
+  renderTabs();
+  renderStats();
+  renderChapters();
+})();
+</script>
+</body>
+</html>
